@@ -483,22 +483,58 @@ async function seedTablePegawai() {
     const jabatanValues = ["Owner", "Manager", "Staff"];
     const names = [];
     const phoneNumbers = [];
+    const managersIdx = [];
     try {
         for (let i = 0; i < 50; i++) {
+            let email;
             let name;
+            let firstName;
+            let lastName;
             do {
-                name = fakerID_ID.person.fullName();
+                firstName = fakerID_ID.person.firstName();
+                lastName = fakerID_ID.person.lastName();
+                name = firstName + ' ' + lastName;
             } while (names.includes(name));
             names.push(name);
             
+            email  = fakerID_ID.internet.email({firstName: firstName, lastName: lastName});
+            
             let phoneNumber;
             do {
-                phoneNumber = fakerID_ID.person.phone();
+                phoneNumber = fakerID_ID.phone.number();
             } while (phoneNumbers.includes(phoneNumber));
             phoneNumbers.push(phoneNumber);
-        }
-    const emails = faker.helpers.uniqueArray(faker.internet.email, names);
+            
+            let jabatan;
+            let idAtasan;
+            if (i == 0) {
+                jabatan = jabatanValues[0];
+                idAtasan = 1;
+            } else {
+                if (managersIdx.length == 0) {
+                    jabatan = jabatanValues[1];
+                    idAtasan = 1;
+                    managersIdx.push(i);
+                } else {
+                    if (fakerID_ID.number.int({ min: 0, max: 3 }) === 0) {
+                        jabatan = jabatanValues[1];
+                        idAtasan = 1;
+                        managersIdx.push(i);
+                    } else {
+                        jabatan = jabatanValues[2];
+                        idAtasan = managersIdx[fakerID_ID.number.int({ min: 0, max: managersIdx.length - 1 })] + 1;
+                    }
+                }
+            }
 
+            try {
+                const query = `INSERT INTO Pegawai (id_atasan, nama, email, nomor_telepon, jabatan) VALUES (?, ?, ?, ?, ?)`;
+                const [rows, fields] = await connection.query(query, [idAtasan, name, email, phoneNumber, jabatan]);
+                console.log(`Inserted ${name} into Pegawai`);
+            } catch (err) {
+                console.error('Error inserting data:', err);
+            }
+        }
     } catch (error) {
       console.error('Error selecting data:', error);
     }
@@ -589,6 +625,8 @@ async function seedTables() {
     await seedTableKontakPerusahaan(); 
 
     await seedTablePerusahaanAsuransiAndPerusahaanPerawatan();
+
+    await seedTablePegawai();
 
     // await seedKendaraanAndItsSpecializations();
 }
