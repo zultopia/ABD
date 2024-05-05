@@ -1,13 +1,12 @@
+const mysql = require('mysql');
 
+const connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'grbadmin',
+  password: 'password',
+  database: 'grb'
+});
 
-
-function createDatabaseGrb_ABD() {
-    /**
-     * CREATE DATABASE Grb_ABD;
-     * SHOW DATABASES;
-     * USE Grb_ABD;
-     */
-}
 
 function createTableKontakPerusahaan() {
     /**
@@ -29,6 +28,27 @@ function createTablePerusahaan() {
         PRIMARY KEY (id_perusahaan)
     );
      */
+
+    connection.query('DROP TABLE IF EXISTS Perusahaan', (err, result) => {
+        if (err) throw err;
+        console.log('Table Perusahaan dropped.');
+      });
+
+    connection.query(
+        `CREATE TABLE Perusahaan (
+            id_perusahaan INT AUTO_INCREMENT, 
+            nama VARCHAR(255), 
+            alamat VARCHAR(255), 
+            PRIMARY KEY (id_perusahaan)
+        )`, 
+        
+        (err, result) => {
+        
+        if (err) throw err;
+        console.log('Table Perusahaan created.');
+      
+    });
+      
 }
 
 
@@ -195,3 +215,47 @@ function createTablePegawai() {
     );
      */
 }
+
+
+/**
+ * Run the seeding, by creating the tables and insert a bunch of data.
+ */
+function main() {
+
+    // Connection request to the database
+    connection.connect((err) => {
+        if (err) {
+          console.log("Error when connecting to the database.");
+          return;
+        }
+        console.log("Successfully connected to the database.");
+      });
+      
+    console.log("Hello world!")
+    
+
+    /**
+     * Create tables using the relation schema we have designed
+     * @ref https://app.diagrams.net/#G1KGB53olz7TQHCSylU_IqyHBWQxJqYH9P#%7B%22pageId%22%3A%22pUiTZZOMAEUaQYOUVsJx%22%7D
+     */
+
+    // Create Perusahaan 
+    createTablePerusahaan();
+
+
+
+
+
+
+    // End the connection to the database
+    connection.end((err) => {
+        if (err) {
+          console.log("Error when ending the connection.");
+          return;
+        }
+        console.log("Successfully end the connection.");
+    });
+
+}
+
+main();
