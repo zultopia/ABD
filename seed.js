@@ -476,6 +476,31 @@ async function seedTableKontakPerusahaan() {
         console.error('Error selecting data:', error);
     }
 }
+
+async function seedTablePegawai() {
+    const jabatanValues = ["Owner", "Manager", "Staff"];
+    const names = [];
+    const phoneNumbers = [];
+    try {
+        for (let i = 0; i < 50; i++) {
+            let name;
+            do {
+                name = fakerID_ID.person.fullName();
+            } while (names.includes(name));
+            names.push(name);
+            
+            let phoneNumber;
+            do {
+                phoneNumber = fakerID_ID.person.phone();
+            } while (phoneNumbers.includes(phoneNumber));
+            phoneNumbers.push(phoneNumber);
+        }
+    const emails = faker.helpers.uniqueArray(faker.internet.email, names);
+
+    } catch (error) {
+      console.error('Error selecting data:', error);
+    }
+}
   
 
 async function seedTables() {
@@ -484,7 +509,7 @@ async function seedTables() {
     
     await seedTableKontakPerusahaan(); 
     
-
+    await seedTablePegawai();
     
     
 }
