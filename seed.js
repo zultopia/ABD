@@ -1,22 +1,23 @@
-const mysql = require('mysql');
+const { createPool } = require('mysql2/promise');
 const { fakerID_ID, faker } = require('@faker-js/faker');
 
-const connection = mysql.createConnection({
+const connection = createPool({
   host: 'localhost',
   user: 'grbadmin',
   password: 'password',
-  database: 'grb'
+  database: 'grb',
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0
 });
 
-function createTable(tableName, query) {
-    connection.query(query, (err, result) => {
-        if (err) throw err;
-        console.log(`Table ${tableName} created.`);
-    });
+async function createTable(tableName, query) {
+    await connection.query(query)
+
 }
 
 
-function createTableKontakPerusahaan() {
+async function createTableKontakPerusahaan() {
     /**
     CREATE TABLE KontakPerusahaan (
         id_perusahaan INT,
@@ -35,10 +36,10 @@ function createTableKontakPerusahaan() {
         FOREIGN KEY (id_perusahaan) REFERENCES Perusahaan(id_perusahaan) 
     )`
 
-    createTable('KontakPerusahaan', query)
+    await createTable('KontakPerusahaan', query)
 }
 
-function createTablePerusahaan() {
+async function createTablePerusahaan() {
     /**
     CREATE TABLE Perusahaan(
         id_perusahaan INT AUTO_INCREMENT,
@@ -56,12 +57,12 @@ function createTablePerusahaan() {
             PRIMARY KEY (id_perusahaan)
         )`
     
-    createTable("Perusahaan", query);
+    await await createTable("Perusahaan", query);
       
 }
 
 
-function createTablePerusahaanAsuransi() {
+async function createTablePerusahaanAsuransi() {
     /**
     CREATE TABLE PerusahaanAsuransi (
         id_PerusahaanAsuransi INT,
@@ -76,10 +77,10 @@ function createTablePerusahaanAsuransi() {
         PRIMARY KEY (id_PerusahaanAsuransi),
         FOREIGN KEY (id_PerusahaanAsuransi) REFERENCES Perusahaan(id_perusahaan) 
     )`
-    createTable("PerusahaanAsuransi", query)
+    await createTable("PerusahaanAsuransi", query)
 }
 
-function createTablePerusahaanPerawatan() {
+async function createTablePerusahaanPerawatan() {
     /**
     CREATE TABLE PerusahaanPerawatan (
         id_PerusahaanPerawatan INT,
@@ -96,10 +97,10 @@ function createTablePerusahaanPerawatan() {
         PRIMARY KEY (id_PerusahaanPerawatan),
         FOREIGN KEY (id_PerusahaanPerawatan) REFERENCES Perusahaan(id_perusahaan)
     )`
-    createTable("PerusahaanPerawatan", query)
+    await createTable("PerusahaanPerawatan", query)
 }
 
-function createTableAsuransi() {
+async function createTableAsuransi() {
     /**
     CREATE TABLE Asuransi (
         id_Asuransi INT AUTO_INCREMENT,
@@ -125,10 +126,10 @@ function createTableAsuransi() {
     )
     `
 
-    createTable("Asuransi", query);
+    await createTable("Asuransi", query);
 }
 
-function createTablePerawatan() {
+async function createTablePerawatan() {
     /**
     CREATE TABLE Perawatan (
         id_Perawatan INT AUTO_INCREMENT,
@@ -154,10 +155,10 @@ function createTablePerawatan() {
     )
     `
 
-    createTable("Perawatan", query)
+    await createTable("Perawatan", query)
 }
 
-function createTableKendaraan() {
+async function createTableKendaraan() {
     /**
     CREATE TABLE Kendaraan (
         model VARCHAR(50),
@@ -177,10 +178,10 @@ function createTableKendaraan() {
         PRIMARY KEY (Model)
     )`
 
-    createTable("Kendaraan", query)
+    await createTable("Kendaraan", query)
 }
 
-function createTableMotor() {
+async function createTableMotor() {
     /**
     CREATE TABLE Motor (
         model_motor VARCHAR(50),
@@ -198,10 +199,10 @@ function createTableMotor() {
     )
     `
 
-    createTable("Motor", query)
+    await createTable("Motor", query)
 }
 
-function createTableMobil() {
+async function createTableMobil() {
     /**
     CREATE TABLE Mobil (
         model_mobil VARCHAR(50),
@@ -222,10 +223,10 @@ function createTableMobil() {
     )
     `
 
-    createTable("Mobil", query)
+    await createTable("Mobil", query)
 }
 
-function createTableDetail() {
+async function createTableDetail() {
     /**
     CREATE TABLE Detail (
         id_detail INT AUTO_INCREMENT,
@@ -242,10 +243,10 @@ function createTableDetail() {
         PRIMARY KEY (id_detail)
     )
     `
-    createTable("Detail", query)
+    await createTable("Detail", query)
 }
 
-function createTableDetailPeminjaman() {
+async function createTableDetailPeminjaman() {
     /**
     CREATE TABLE DetailPeminjaman (
         id_peminjaman INT,
@@ -269,10 +270,10 @@ function createTableDetailPeminjaman() {
     )
     `
 
-    createTable("DetailPeminjaman", query)
+    await createTable("DetailPeminjaman", query)
 }
 
-function createTablePeminjaman() {
+async function createTablePeminjaman() {
     /**
     CREATE TABLE Peminjaman (
         id_peminjaman INT AUTO_INCREMENT,
@@ -293,10 +294,10 @@ function createTablePeminjaman() {
     )
     `
 
-    createTable("Peminjaman", query)
+    await createTable("Peminjaman", query)
 }
 
-function createTableKlien() {
+async function createTableKlien() {
     /**
     CREATE TABLE Klien (
         id_klien INT AUTO_INCREMENT,
@@ -316,10 +317,10 @@ function createTableKlien() {
     )
     `
 
-    createTable("Klien", query)
+    await createTable("Klien", query)
 }
 
-function createTablePeminjamanKlien() {
+async function createTablePeminjamanKlien() {
     /**
     CREATE TABLE PeminjamanKlien (
         id_klien INT,
@@ -342,10 +343,10 @@ function createTablePeminjamanKlien() {
         FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman)
     )
     `
-    createTable("PeminjamanKlien", query)
+    await createTable("PeminjamanKlien", query)
 }
 
-function createTablePegawai() {
+async function createTablePegawai() {
     /**
     CREATE TABLE Pegawai (
         id_pegawai INT AUTO_INCREMENT,
@@ -370,11 +371,11 @@ function createTablePegawai() {
         PRIMARY KEY (id_pegawai),
         FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai)  
     )`
-    createTable("Pegawai", query)
+    await createTable("Pegawai", query)
 }
 
 
-function createTables() {
+async function createTables() {
         // OK !
         createTablePerusahaan();
 
@@ -418,83 +419,101 @@ function createTables() {
 }
 
 
-function seedTablePerusahaan() {
+async function seedTablePerusahaan() {
     let Names = [];
     let Addresses = [];
+  
+    for (let i = 0; i < 30; i++) {
+      let companyName;
+      do {
+        companyName = fakerID_ID.company.name();
+      } while (Names.includes(companyName));
+      Names.push(companyName);
+      companyName = companyName.replace(/'/g, "''");
+  
+      let address;
+      do {
+        address = faker.location.streetAddress({ useFullAddress: true })
+      } while (address.length > 255 || Addresses.includes(address));
+      Addresses.push(address);
+      address = address.replace(/'/g, "''");
+  
+      try {
+        const query = `INSERT INTO Perusahaan (nama, alamat) VALUES (?, ?)`;
+        const [rows, fields] = await connection.query(query, [companyName, address]);
+        console.log(`Inserted ${companyName} into Perusahaan`);
+      } catch (err) {
+        console.error('Error inserting data:', err);
+      }
+    }
+  }
 
-    for (let i = 0; i < 50; i++) {
-        
-        let companyName;
-        do {
-            companyName = fakerID_ID.company.name();
-        } while (Names.includes(companyName));
-        Names.push(companyName);
-        companyName.replace(/'/g, "''");
+async function seedTableKontakPerusahaan() {
+    const queryGetIds = `SELECT id_perusahaan FROM Perusahaan`;
+    try {
+        const [rows, fields] = await connection.query(queryGetIds);
+        for (let i = 0; i < rows.length; i++) {
+            const id_perusahaan = rows[i].id_perusahaan;
+            const kontak = [];
+            const numberOfContacts = fakerID_ID.number.int({ min: 1, max: 3 });
+            for (let j = 0; j < numberOfContacts; j++) {
+                let contact;
+                do {
+                    contact = fakerID_ID.phone.number();
+                } while (kontak.includes(contact));
+                kontak.push(contact);
 
-        let address;
-        do {
-            address = faker.location.streetAddress({ useFullAddress: true })
-        } while (address.length > 255 || Addresses.includes(address));
-        Addresses.push(address);
-        address.replace(/'/g, "''");
-
-        const query = `INSERT INTO Perusahaan (nama, alamat) VALUES ('${companyName}', '${address}')`;
-        connection.query(query, (err, result) => {
-            if (err) throw err;
-            console.log(`Inserted ${companyName} into Perusahaan`);
-        });
-        
-        
+            const queryInsert = `INSERT INTO KontakPerusahaan (id_perusahaan, kontak) VALUES (?, ?)`;
+            try {
+                await connection.query(queryInsert, [id_perusahaan, contact]);
+                console.log(`Inserted ${contact} into KontakPerusahaan`);
+            } catch (error) {
+                console.error('Error inserting data:', error);
+            }
+            }
+        }
+    } catch (error) {
+        console.error('Error selecting data:', error);
     }
 }
+  
 
-function seedTables() {
-    fakerID_ID.seed(100)
+async function seedTables() {
+    
+    await seedTablePerusahaan();
+    
+    await seedTableKontakPerusahaan(); 
+    
 
-    seedTablePerusahaan();
-
-
-
+    
+    
 }
 
 /**
  * Run the seeding, by creating the tables and insert a bunch of data.
- */
-function main() {
-
-    // Connection request to the database
-    connection.connect((err) => {
-        if (err) {
-          console.log("Error when connecting to the database.");
-          return;
-        }
-        console.log("Successfully connected to the database.");
-    });
-    
-
-    /**
-     * Create tables using the relation schema we have designed
-     * @ref https://app.diagrams.net/#G1KGB53olz7TQHCSylU_IqyHBWQxJqYH9P#%7B%22pageId%22%3A%22pUiTZZOMAEUaQYOUVsJx%22%7D
-     */
-
-    createTables();
-
-
-    // Seed all the tables using faker.js
-    seedTables();
+*/
+async function main() {
+    fakerID_ID.seed(100)
 
 
 
 
+    try {
+        /**
+         * Create tables using the relation schema we have designed
+         * @ref https://app.diagrams.net/#G1KGB53olz7TQHCSylU_IqyHBWQxJqYH9P#%7B%22pageId%22%3A%22pUiTZZOMAEUaQYOUVsJx%22%7D
+         */
+        await createTables();
 
-    // End the connection to the database
-    connection.end((err) => {
-        if (err) {
-          console.log("Error when ending the connection.");
-          return;
-        }
-        console.log("Successfully end the connection.");
-    });
+        // Seed all the tables using faker.js
+        await seedTables();
+
+        await connection.end();
+    } catch (err){
+        console.error(err);
+    }
+
+
 
 }
 
