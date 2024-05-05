@@ -369,7 +369,7 @@ async function createTablePegawai() {
         nama VARCHAR(255),
         email VARCHAR(255),
         nomor_telepon VARCHAR(20),
-        jabatan VARCHAR(50),
+        jabatan ENUM('Owner', 'Manager', 'Staff'),
         PRIMARY KEY (id_pegawai),
         FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai)  
     )`
@@ -484,59 +484,55 @@ async function seedTablePegawai() {
     const names = [];
     const phoneNumbers = [];
     const managersIdx = [];
-    try {
-        for (let i = 0; i < 50; i++) {
-            let email;
-            let name;
-            let firstName;
-            let lastName;
-            do {
-                firstName = fakerID_ID.person.firstName();
-                lastName = fakerID_ID.person.lastName();
-                name = firstName + ' ' + lastName;
-            } while (names.includes(name));
-            names.push(name);
-            
-            email  = fakerID_ID.internet.email({firstName: firstName, lastName: lastName});
-            
-            let phoneNumber;
-            do {
-                phoneNumber = fakerID_ID.phone.number();
-            } while (phoneNumbers.includes(phoneNumber));
-            phoneNumbers.push(phoneNumber);
-            
-            let jabatan;
-            let idAtasan;
-            if (i == 0) {
-                jabatan = jabatanValues[0];
+    for (let i = 0; i < 50; i++) {
+        let email;
+        let name;
+        let firstName;
+        let lastName;
+        do {
+            firstName = fakerID_ID.person.firstName();
+            lastName = fakerID_ID.person.lastName();
+            name = firstName + ' ' + lastName;
+        } while (names.includes(name));
+        names.push(name);
+        
+        email  = fakerID_ID.internet.email({firstName: firstName, lastName: lastName});
+        
+        let phoneNumber;
+        do {
+            phoneNumber = fakerID_ID.phone.number();
+        } while (phoneNumbers.includes(phoneNumber));
+        phoneNumbers.push(phoneNumber);
+        
+        let jabatan;
+        let idAtasan;
+        if (i == 0) {
+            jabatan = jabatanValues[0];
+            idAtasan = 1;
+        } else {
+            if (managersIdx.length == 0) {
+                jabatan = jabatanValues[1];
                 idAtasan = 1;
+                managersIdx.push(i);
             } else {
-                if (managersIdx.length == 0) {
+                if (fakerID_ID.number.int({ min: 0, max: 3 }) === 0) {
                     jabatan = jabatanValues[1];
                     idAtasan = 1;
                     managersIdx.push(i);
                 } else {
-                    if (fakerID_ID.number.int({ min: 0, max: 3 }) === 0) {
-                        jabatan = jabatanValues[1];
-                        idAtasan = 1;
-                        managersIdx.push(i);
-                    } else {
-                        jabatan = jabatanValues[2];
-                        idAtasan = managersIdx[fakerID_ID.number.int({ min: 0, max: managersIdx.length - 1 })] + 1;
-                    }
+                    jabatan = jabatanValues[2];
+                    idAtasan = managersIdx[fakerID_ID.number.int({ min: 0, max: managersIdx.length - 1 })] + 1;
                 }
             }
-
-            try {
-                const query = `INSERT INTO Pegawai (id_atasan, nama, email, nomor_telepon, jabatan) VALUES (?, ?, ?, ?, ?)`;
-                const [rows, fields] = await connection.query(query, [idAtasan, name, email, phoneNumber, jabatan]);
-                console.log(`Inserted ${name} into Pegawai`);
-            } catch (err) {
-                console.error('Error inserting data:', err);
-            }
         }
-    } catch (error) {
-      console.error('Error selecting data:', error);
+
+        try {
+            const query = `INSERT INTO Pegawai (id_atasan, nama, email, nomor_telepon, jabatan) VALUES (?, ?, ?, ?, ?)`;
+            const [rows, fields] = await connection.query(query, [idAtasan, name, email, phoneNumber, jabatan]);
+            console.log(`Inserted ${name} into Pegawai`);
+        } catch (err) {
+            console.error('Error inserting data:', err);
+        }
     }
 }
 
@@ -629,7 +625,7 @@ async function seedTables() {
     await seedKendaraanAndItsSpecializations();
     
     await seedTablePegawai();
-    
+
 }
 
 /**
