@@ -476,6 +476,28 @@ async function seedTableKontakPerusahaan() {
         console.error('Error selecting data:', error);
     }
 }
+
+async function seedTablePerusahaanAsuransiAndPerusahaanPerawatan() {
+    const queryGetIds = `SELECT id_perusahaan FROM Perusahaan`;
+    try {
+        const [rows, fields] = await connection.query(queryGetIds);
+        for (let i = 0; i < rows.length; i++) {
+            const id_perusahaan = rows[i].id_perusahaan;
+            if (fakerID_ID.number.int({ min: 0, max: 1 }) === 0){
+                const queryInsertAsuransi = `INSERT INTO PerusahaanAsuransi (id_PerusahaanAsuransi) VALUES (?)`;
+                await connection.query(queryInsertAsuransi, [id_perusahaan]);
+            } else {
+                const queryInsertPerawatan = `INSERT INTO PerusahaanPerawatan (id_PerusahaanPerawatan, jumlah_teknisi) VALUES (?, ?)`;
+                await connection.query(queryInsertPerawatan, [id_perusahaan, fakerID_ID.number.int({ min: 3, max: 15 })]);
+            }
+
+            console.log(`Inserted ${id_perusahaan} into PerusahaanAsuransi OR PerusahaanPerawatan`);
+        }
+    } catch  (err) {
+        console.error('Error selecting data:', err);
+    
+    }
+}
   
 
 async function seedTables() {
@@ -483,10 +505,8 @@ async function seedTables() {
     await seedTablePerusahaan();
     
     await seedTableKontakPerusahaan(); 
-    
 
-    
-    
+    await seedTablePerusahaanAsuransiAndPerusahaanPerawatan();
 }
 
 /**
