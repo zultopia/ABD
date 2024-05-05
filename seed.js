@@ -369,7 +369,7 @@ async function createTablePegawai() {
         nama VARCHAR(255),
         email VARCHAR(255),
         nomor_telepon VARCHAR(20),
-        jabatan ENUM('Owner', 'Manager', 'Staff'),
+        jabatan ENUM('owner', 'manager', 'staff'),
         PRIMARY KEY (id_pegawai),
         FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai)  
     )`
@@ -480,7 +480,7 @@ async function seedTableKontakPerusahaan() {
 }
 
 async function seedTablePegawai() {
-    const jabatanValues = ["Owner", "Manager", "Staff"];
+    const jabatanValues = ["owner", "manager", "staff"];
     const names = [];
     const phoneNumbers = [];
     const managersIdx = [];
@@ -533,6 +533,47 @@ async function seedTablePegawai() {
         } catch (err) {
             console.error('Error inserting data:', err);
         }
+    }
+}
+
+async function seedTableKlien() {
+    const queryGetPegawaiRows = `SELECT * FROM Pegawai`;
+    try {
+        const [rows, fields] = await connection.query(queryGetPegawaiRows);
+        const perusahaanNames = rows.map(row => row.nama);
+        const perusahaanPhoneNumbers = rows.map(row => row.nomor_telepon)
+        const names = [];
+        const phoneNumbers = [];
+        for (let i = 0; i < 20; i++) {
+            let email;
+            let name;
+            let firstName;
+            let lastName;
+            do {
+                firstName = fakerID_ID.person.firstName();
+                lastName = fakerID_ID.person.lastName();
+                name = firstName + ' ' + lastName;
+            } while (names.includes(name) || perusahaanNames.includes(name));
+            names.push(name);
+            
+            email  = fakerID_ID.internet.email({firstName: firstName, lastName: lastName});
+            
+            let phoneNumber;
+            do {
+                phoneNumber = fakerID_ID.phone.number();
+            } while (phoneNumbers.includes(phoneNumber) || perusahaanPhoneNumbers.includes(phoneNumber));
+            phoneNumbers.push(phoneNumber);
+
+            try {
+                const query = `INSERT INTO Klien (nama, email, nomor_telepon) VALUES (?, ?, ?)`;
+                const [rows, fields] = await connection.query(query, [name, email, phoneNumber]);
+                console.log(`Inserted ${name} into Klien`);
+            } catch (err) {
+                console.error('Error inserting data:', err);
+            }
+        }
+    } catch (error) {
+        console.error('Error selecting data:', error);
     }
 }
 
@@ -613,6 +654,72 @@ async function seedKendaraanAndItsSpecializations() {
     }
 }
   
+async function seedTablePeminjaman() {
+    const statusPeminjamanValues = ["returned", "pending", "rented"];
+    let startDates = [];
+    let currentDate = new Date('2024-05-05');
+    for (let i = 0; i < 20; i++) {    
+        let startDate;
+        do {
+            startDate = faker.date.between({ from: '2024-04-01', to: '2024-05-05' });
+        } while (startDates.includes(startDate));
+        startDates.push(startDate);
+        
+        let endDate = faker.date.soon({ days: 30, refDate: startDate });
+        
+        const differenceInMillis = currentDate.getTime() - endDate.getTime();
+        const differenceInDays = differenceInMillis / (1000 * 3600 * 24);
+
+        let statusPeminjaman;
+        if (currentDate < endDate) {
+            statusPeminjaman = statusPeminjamanValues[2];
+        } else {
+            // Jika lebih dari 5 hari lewat endDate peminjaman dibuat sudah dikembalikan
+            if (differenceInDays > 5) {
+                statusPeminjaman = statusPeminjamanValues[0];
+            } else {
+                // Bisa jadi peminjam lewat mengembalikan selama maksimal 5 hari
+                statusPeminjaman = statusPeminjamanValues[fakerID_ID.number.int({ min: 0, max: 1})]
+            }
+        }
+        try {
+            const query = `INSERT INTO Peminjaman (status_peminjaman, tanggal_mulai, tanggal_berakhir) VALUES (?, ?, ?)`;
+            const [rows, fields] = await connection.query(query, [statusPeminjaman, startDate, endDate]);
+        } catch (err) {
+            console.error('Error inserting data:', err);
+        }
+    }
+}
+
+async function seedTablePeminjamanKlien() {
+    const queryGetPegawai = `SELECT * FROM Pegawai`;
+    const queryGetKlien = `SELECT id_klien FROM Klien`;
+    const queryGetPeminjaman = `SELECT id_peminjaman FROM Peminjaman`;
+
+    try {
+      const [pegawai] = await connection.query(queryGetPegawai);
+      const [klien] = await connection.query(queryGetKlien);
+      const [peminjaman] = await connection.query(queryGetPeminjaman);
+
+      for (let i = 0; i < 50; i++) {
+        const idKlien= faker.helpers.arrayElement(klien).id_klien;
+
+        let tempPegawai;
+        do { 
+            tempPegawai = faker.helpers.arrayElement(pegawai);
+        } while (tempPegawai.jabatan !== "staff")
+        const idPegawai = tempPegawai.id_pegawai;
+        
+        const idPeminjaman = faker.helpers.arrayElement(peminjaman).id_peminjaman;
+
+        const query = `INSERT INTO PeminjamanKlien (id_klien, id_pegawai, id_peminjaman) VALUES (?, ?, ?)`;
+
+        await connection.query(query, [idKlien, idPegawai, idPeminjaman]);
+      }
+    } catch (error) {
+        console.error('Error seeding PeminjamanKlien:', error);
+    }
+}
 
 async function seedTables() {
     
@@ -626,6 +733,11 @@ async function seedTables() {
     
     await seedTablePegawai();
 
+    await seedTableKlien();
+
+    await seedTablePeminjaman();
+
+    await seedTablePeminjamanKlien();
 }
 
 /**
