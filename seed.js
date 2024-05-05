@@ -7,16 +7,34 @@ const connection = mysql.createConnection({
   database: 'grb'
 });
 
+function createTable(tableName, query) {
+    connection.query(query, (err, result) => {
+        if (err) throw err;
+        console.log(`Table ${tableName} created.`);
+    });
+}
+
 
 function createTableKontakPerusahaan() {
     /**
     CREATE TABLE KontakPerusahaan (
         id_perusahaan INT,
         kontak VARCHAR(20),
-        PRIMARY KEY (id_perusahaan),
+        PRIMARY KEY (id_perusahaan, kontak),
         FOREIGN KEY (id_perusahaan) REFERENCES Perusahaan(id_perusahaan) 
     );
      */
+
+    const query = 
+        `
+    CREATE TABLE KontakPerusahaan (
+        id_perusahaan INT,
+        kontak VARCHAR(20),
+        PRIMARY KEY (id_perusahaan, kontak),
+        FOREIGN KEY (id_perusahaan) REFERENCES Perusahaan(id_perusahaan) 
+    )`
+
+    createTable('KontakPerusahaan', query)
 }
 
 function createTablePerusahaan() {
@@ -29,25 +47,15 @@ function createTablePerusahaan() {
     );
      */
 
-    connection.query('DROP TABLE IF EXISTS Perusahaan', (err, result) => {
-        if (err) throw err;
-        console.log('Table Perusahaan dropped.');
-      });
-
-    connection.query(
+    const query = 
         `CREATE TABLE Perusahaan (
             id_perusahaan INT AUTO_INCREMENT, 
             nama VARCHAR(255), 
             alamat VARCHAR(255), 
             PRIMARY KEY (id_perusahaan)
-        )`, 
-        
-        (err, result) => {
-        
-        if (err) throw err;
-        console.log('Table Perusahaan created.');
-      
-    });
+        )`
+    
+    createTable("Perusahaan", query);
       
 }
 
@@ -60,6 +68,14 @@ function createTablePerusahaanAsuransi() {
         FOREIGN KEY (id_PerusahaanAsuransi) REFERENCES Perusahaan(id_perusahaan) 
     );
      */
+
+    const query = `
+    CREATE TABLE PerusahaanAsuransi (
+        id_PerusahaanAsuransi INT,
+        PRIMARY KEY (id_PerusahaanAsuransi),
+        FOREIGN KEY (id_PerusahaanAsuransi) REFERENCES Perusahaan(id_perusahaan) 
+    )`
+    createTable("PerusahaanAsuransi", query)
 }
 
 function createTablePerusahaanPerawatan() {
@@ -71,6 +87,15 @@ function createTablePerusahaanPerawatan() {
         FOREIGN KEY (id_PerusahaanPerawatan) REFERENCES Perusahaan(id_perusahaan)
     );
      */
+
+    const query = `
+    CREATE TABLE PerusahaanPerawatan (
+        id_PerusahaanPerawatan INT,
+        jumlah_teknisi INT,
+        PRIMARY KEY (id_PerusahaanPerawatan),
+        FOREIGN KEY (id_PerusahaanPerawatan) REFERENCES Perusahaan(id_perusahaan)
+    )`
+    createTable("PerusahaanPerawatan", query)
 }
 
 function createTableAsuransi() {
@@ -113,6 +138,17 @@ function createTableKendaraan() {
         PRIMARY KEY (Model)
     );
      */
+
+    const query = `
+    CREATE TABLE Kendaraan (
+        model VARCHAR(50),
+        tahun_keluaran INT,
+        tipe_elektrik ENUM('Elektrik', 'NonElektrik'),
+        jumlah_kendaraan INT,
+        PRIMARY KEY (Model)
+    )`
+
+    createTable("Kendaraan", query)
 }
 
 function createTableMotor() {
@@ -217,6 +253,8 @@ function createTablePegawai() {
 }
 
 
+
+
 /**
  * Run the seeding, by creating the tables and insert a bunch of data.
  */
@@ -229,9 +267,7 @@ function main() {
           return;
         }
         console.log("Successfully connected to the database.");
-      });
-      
-    console.log("Hello world!")
+    });
     
 
     /**
@@ -239,8 +275,20 @@ function main() {
      * @ref https://app.diagrams.net/#G1KGB53olz7TQHCSylU_IqyHBWQxJqYH9P#%7B%22pageId%22%3A%22pUiTZZOMAEUaQYOUVsJx%22%7D
      */
 
-    // Create Perusahaan 
+    // OK !
     createTablePerusahaan();
+
+    // OK !
+    createTableKontakPerusahaan();
+
+    // OK !
+    createTablePerusahaanAsuransi();
+
+    // OK !
+    createTablePerusahaanPerawatan();
+
+    // OK !
+    createTableKendaraan();
 
 
 
