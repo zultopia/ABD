@@ -379,44 +379,44 @@ async function createTablePegawai() {
 
 async function createTables() {
         // OK !
-        createTablePerusahaan();
+        await createTablePerusahaan();
 
         // OK !
         // Needs perusahaan
-        createTableKontakPerusahaan();
+        await createTableKontakPerusahaan();
     
         // OK !
         // Needs Perusahaan
-        createTablePerusahaanAsuransi();
+        await createTablePerusahaanAsuransi();
     
         // OK !
         // Needs Perusahaan
-        createTablePerusahaanPerawatan();
+        await createTablePerusahaanPerawatan();
     
         // OK !
-        createTableKendaraan();
+        await createTableKendaraan();
     
         // 
-        createTableAsuransi();
+        await createTableAsuransi();
     
         //
-        createTablePerawatan();
+        await createTablePerawatan();
     
-        createTableMobil();
+        await createTableMobil();
     
-        createTableMotor();
+        await createTableMotor();
     
-        createTableDetail();
+        await createTableDetail();
     
-        createTablePeminjaman();
+        await createTablePeminjaman();
     
-        createTableDetailPeminjaman();
+        await createTableDetailPeminjaman();
     
-        createTableKlien();
+        await createTableKlien();
     
-        createTablePegawai();
+        await createTablePegawai();
     
-        createTablePeminjamanKlien();
+        await createTablePeminjamanKlien();
     
 }
 
@@ -590,7 +590,7 @@ async function seedTables() {
 
     await seedTablePerusahaanAsuransiAndPerusahaanPerawatan();
 
-    await seedKendaraanAndItsSpecializations();
+    // await seedKendaraanAndItsSpecializations();
 }
 
 /**
