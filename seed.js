@@ -59,7 +59,7 @@ async function createTablePerusahaan() {
             PRIMARY KEY (id_perusahaan)
         )`
     
-    await await createTable("Perusahaan", query);
+    await createTable("Perusahaan", query);
       
 }
 
@@ -653,7 +653,99 @@ async function seedKendaraanAndItsSpecializations() {
         }
     }
 }
+
+async function seedTableAsuransi() {
+    const queryGetPerusahaanAsuransi = `SELECT id_PerusahaanAsuransi FROM PerusahaanAsuransi`;
+    const queryGetKendaraan = `SELECT model FROM Kendaraan`;
   
+    try {
+      const [perusahaanAsuransi] = await connection.query(queryGetPerusahaanAsuransi);
+      const [kendaraan] = await connection.query(queryGetKendaraan);
+  
+      for (const car of kendaraan) {
+        const disediakan_oleh = faker.helpers.arrayElement(perusahaanAsuransi).id_PerusahaanAsuransi;
+        const dimiliki_oleh = car.model;
+        const tanggal_exp = faker.date.future();
+        const harga_asuransi = faker.finance.amount(500000, 5000000, 2); 
+  
+        const query = `INSERT INTO Asuransi (disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi) 
+                       VALUES (?, ?, ?, ?)`;
+  
+        await connection.query(query, [disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi]);
+        console.log(`Inserted insurance data for ${dimiliki_oleh}`);
+      }
+    } catch (error) {
+      console.error('Error seeding Asuransi:', error);
+    }
+}
+
+async function seedTablePerawatan() {
+    const queryGetPerusahaanPerawatan = `SELECT id_PerusahaanPerawatan FROM PerusahaanPerawatan`;
+    const queryGetKendaraan = `SELECT model FROM Kendaraan`;
+  
+    try {
+      const [perusahaanPerawatan] = await connection.query(queryGetPerusahaanPerawatan);
+      const [kendaraan] = await connection.query(queryGetKendaraan);
+  
+      for (const car of kendaraan) {
+        const disediakan_oleh = faker.helpers.arrayElement(perusahaanPerawatan).id_PerusahaanPerawatan;
+        const dimiliki_oleh = car.model;
+        const tanggal = faker.date.past(); 
+        const tipe = faker.vehicle.vehicleType(); 
+  
+        const query = `INSERT INTO Perawatan (disediakan_oleh, dimiliki_oleh, tanggal, tipe) 
+                       VALUES (?, ?, ?, ?)`;
+  
+        await connection.query(query, [disediakan_oleh, dimiliki_oleh, tanggal, tipe]);
+        console.log(`Inserted maintenance data for ${dimiliki_oleh}`);
+      }
+    } catch (error) {
+      console.error('Error seeding Perawatan:', error);
+    }
+}
+
+async function seedTableDetail() {
+    try {
+      for (let i = 0; i < 30; i++) {
+        const harga = faker.finance.amount(100000, 1000000, 2); 
+        const kuantitas = faker.number.int({ min: 1, max: 50 });
+  
+        const query = `INSERT INTO Detail (harga, kuantitas) 
+                       VALUES (?, ?)`;
+  
+        await connection.query(query, [harga, kuantitas]);
+        console.log(`Inserted detail data with price: ${harga} and quantity: ${kuantitas}`);
+      }
+    } catch (error) {
+      console.error('Error seeding Detail:', error);
+    }
+}  
+
+async function seedTableDetailPeminjaman() {
+    const queryGetPeminjaman = `SELECT id_peminjaman FROM Peminjaman`;
+    const queryGetDetail = `SELECT id_detail FROM Detail`;
+    const queryGetKendaraan = `SELECT model FROM Kendaraan`;
+  
+    try {
+      const [peminjaman] = await connection.query(queryGetPeminjaman);
+      const [detail] = await connection.query(queryGetDetail);
+      const [kendaraan] = await connection.query(queryGetKendaraan);
+  
+      for (let i = 0; i < 20; i++) {
+        const id_peminjaman = faker.helpers.arrayElement(peminjaman).id_peminjaman;
+        const id_detail_peminjaman = faker.helpers.arrayElement(detail).id_detail;
+        const model_kendaraan = faker.helpers.arrayElement(kendaraan).model;
+  
+        const query = `INSERT INTO DetailPeminjaman (id_peminjaman, id_detail_peminjaman, model_kendaraan) 
+                       VALUES (?, ?, ?)`;
+  
+        await connection.query(query, [id_peminjaman, id_detail_peminjaman, model_kendaraan]);
+        console.log(`Inserted detail loan data for ${model_kendaraan}`);
+      }
+    } catch (error) {
+      console.error('Error seeding DetailPeminjaman:', error);
+    }
+}  
 async function seedTablePeminjaman() {
     const statusPeminjamanValues = ["returned", "pending", "rented"];
     let startDates = [];
@@ -732,12 +824,22 @@ async function seedTables() {
     await seedKendaraanAndItsSpecializations();
     
     await seedTablePegawai();
-
+    
     await seedTableKlien();
 
     await seedTablePeminjaman();
 
     await seedTablePeminjamanKlien();
+
+    await seedTableAsuransi();
+
+    await seedTablePerawatan();
+
+    await seedTableDetail();
+
+    await seedTableDetailPeminjaman();
+
+
 }
 
 /**
@@ -745,9 +847,6 @@ async function seedTables() {
 */
 async function main() {
     fakerID_ID.seed(100)
-
-
-
 
     try {
         /**
@@ -763,8 +862,6 @@ async function main() {
     } catch (err){
         console.error(err);
     }
-
-
 
 }
 
