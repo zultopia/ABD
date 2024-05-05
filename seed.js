@@ -1,5 +1,7 @@
 const { createPool } = require('mysql2/promise');
 const { fakerID_ID, faker } = require('@faker-js/faker');
+const motor = require('./motorcycles.js');
+
 
 const connection = createPool({
   host: 'localhost',
@@ -498,6 +500,61 @@ async function seedTablePerusahaanAsuransiAndPerusahaanPerawatan() {
     
     }
 }
+
+async function seedKendaraanAndItsSpecializations() {
+    let motorSet = []
+    let mobilSet = []
+
+    for (let i = 0; i < 50; i++) {
+        if (fakerID_ID.number.int({ min: 0, max: 1 }) === 0) {
+            // Motor
+
+            let currentMotor;
+            do {
+                currentMotor = motor[fakerID_ID.number.int({ min: 0, max: motor.length - 1 })];
+            } while (motorSet.includes(currentMotor.model));
+            motorSet.push(currentMotor.model);
+
+            const queryInsertKendaraan = `INSERT INTO Kendaraan (model, tahun_keluaran, tipe_elektrik, jumlah_kendaraan) VALUES (?, ?, ?, ?)`;
+            await connection.query(queryInsertKendaraan, [currentMotor.model, currentMotor.tahun_keluaran, currentMotor.tipe_elektrik ? 'Elektrik' : 'NonElektrik', currentMotor.jumlah_kendaraan]);
+
+            const queryInsertMotor = `INSERT INTO Motor (model_motor, kapasitas_mesin) VALUES (?, ?)`;
+            await connection.query(queryInsertMotor, [currentMotor.model, currentMotor.kapasitas_mesin]);
+        } else {
+            let currentModel;
+            do {
+                currentModel = faker.vehicle.model()
+            } while (mobilSet.includes(currentModel));
+            mobilSet.push(currentModel);
+
+            let type = faker.vehicle.type();
+            let carType;
+            if (type.includes('SUV')) {
+                carType = 'SUV';
+            } else if (type.includes('Van') || type.includes('Minivan') || type.includes('van') || type.includes('minivan')) {
+                carType = 'Van';
+            } else {
+                carType = 'Normal';
+            }
+                
+
+            const currentMobil = {
+                model: currentModel,
+                tahun_keluaran: faker.number.int({ min: 2000, max: 2022 }),
+                jumlah_kursi: faker.number.int({ min: 2, max: 8 }),
+                kelas: carType,
+                jumlah_kendaraan: faker.number.int({ min: 1, max: 100 }),
+            }
+
+
+            const queryInsertKendaraan = `INSERT INTO Kendaraan (model, tahun_keluaran, tipe_elektrik, jumlah_kendaraan) VALUES (?, ?, ?, ?)`;
+            await connection.query(queryInsertKendaraan, [currentMobil.model, currentMobil.tahun_keluaran, currentMobil.tipe_elektrik ? 'Elektrik' : 'NonElektrik', currentMobil.jumlah_kendaraan]);
+
+            const queryInsertMobil = `INSERT INTO Mobil (model_mobil, jumlah_kursi, kelas) VALUES (?, ?, ?)`;
+            await connection.query(queryInsertMobil, [currentMobil.model, currentMobil.jumlah_kursi, currentMobil.kelas]);
+        }
+    }
+}
   
 
 async function seedTables() {
@@ -507,6 +564,8 @@ async function seedTables() {
     await seedTableKontakPerusahaan(); 
 
     await seedTablePerusahaanAsuransiAndPerusahaanPerawatan();
+
+    await seedKendaraanAndItsSpecializations();
 }
 
 /**

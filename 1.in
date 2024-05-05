@@ -1,0 +1,387 @@
+[
+  {
+    model: 'Electric Transport Moped',
+    tahun_keluaran: 2013,
+    kapasitas_mesin: 4000,
+    jumlah_kendaraan: 35,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2021,
+    kapasitas_mesin: 3900,
+    jumlah_kendaraan: 8,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 400 ',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 399,
+    jumlah_kendaraan: 63,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZi',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 149,
+    jumlah_kendaraan: 1,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Ninja 1000SX',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1043,
+    jumlah_kendaraan: 96,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Ninja 400 KRT Edition',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 399,
+    jumlah_kendaraan: 57,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Aerox 155',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 155,
+    jumlah_kendaraan: 6,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZ-S Fi Deluxe',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 149,
+    jumlah_kendaraan: 69,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2019,
+    kapasitas_mesin: 2900,
+    jumlah_kendaraan: 67,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Eco 08 Electric',
+    tahun_keluaran: 2009,
+    kapasitas_mesin: 300,
+    jumlah_kendaraan: 16,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Cool Electric',
+    tahun_keluaran: 2014,
+    kapasitas_mesin: 800,
+    jumlah_kendaraan: 100,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Wiz Electric',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 2900,
+    jumlah_kendaraan: 93,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 650 Performance',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 649,
+    jumlah_kendaraan: 29,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Grizzly 90',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 90,
+    jumlah_kendaraan: 46,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Kodiak 450',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 421,
+    jumlah_kendaraan: 28,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZ-FI',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 149,
+    jumlah_kendaraan: 76,
+    tipe_elektrik: false
+  },
+  {
+    model: 'EV 60 Electric',
+    tahun_keluaran: 2011,
+    kapasitas_mesin: 800,
+    jumlah_kendaraan: 31,
+    tipe_elektrik: true
+  },
+  {
+    model: 'AG125',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 124,
+    jumlah_kendaraan: 35,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FJR1300ES',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1298,
+    jumlah_kendaraan: 74,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric Flash',
+    tahun_keluaran: 2010,
+    kapasitas_mesin: 800,
+    jumlah_kendaraan: 26,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Bolt R-Spec',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 942,
+    jumlah_kendaraan: 99,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Ninja 650 Urban',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 649,
+    jumlah_kendaraan: 97,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Minitrial Electric 16',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 700,
+    jumlah_kendaraan: 63,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2017,
+    kapasitas_mesin: 29400,
+    jumlah_kendaraan: 74,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 125 Performance',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 125,
+    jumlah_kendaraan: 82,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Grizzly EPS XT-R',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 686,
+    jumlah_kendaraan: 11,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2016,
+    kapasitas_mesin: 2900,
+    jumlah_kendaraan: 89,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Monterey Electric ',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1500,
+    jumlah_kendaraan: 21,
+    tipe_elektrik: true
+  },
+  {
+    model: 'FZ-S Fi ',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 149,
+    jumlah_kendaraan: 27,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZS 25',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 249,
+    jumlah_kendaraan: 46,
+    tipe_elektrik: false
+  },
+  {
+    model: '1 Electric',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 80300,
+    jumlah_kendaraan: 33,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 125',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 125,
+    jumlah_kendaraan: 68,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Epico Electric',
+    tahun_keluaran: 2012,
+    kapasitas_mesin: 2000,
+    jumlah_kendaraan: 87,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Crypton ',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 110,
+    jumlah_kendaraan: 10,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Ninja 300',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 296,
+    jumlah_kendaraan: 42,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2016,
+    kapasitas_mesin: 29400,
+    jumlah_kendaraan: 34,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Dnepr Electric',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 34300,
+    jumlah_kendaraan: 88,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Grizzly EPS SE',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 686,
+    jumlah_kendaraan: 57,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Grizzly EPS',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 686,
+    jumlah_kendaraan: 86,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Minitrial Electric 20 XL',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1300,
+    jumlah_kendaraan: 45,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Prima Electric',
+    tahun_keluaran: 2012,
+    kapasitas_mesin: 2000,
+    jumlah_kendaraan: 76,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 650 ',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 649,
+    jumlah_kendaraan: 82,
+    tipe_elektrik: false
+  },
+  {
+    model: 'AG200F',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 196,
+    jumlah_kendaraan: 95,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZ 25',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 249,
+    jumlah_kendaraan: 65,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FJR1300AE',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1298,
+    jumlah_kendaraan: 97,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric Matrix',
+    tahun_keluaran: 2010,
+    kapasitas_mesin: 1000,
+    jumlah_kendaraan: 35,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Fascino 125Fi',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 125,
+    jumlah_kendaraan: 72,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Ninja 1000SX Tourer',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 1043,
+    jumlah_kendaraan: 30,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Electric',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 3900,
+    jumlah_kendaraan: 47,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Delight 125',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 125,
+    jumlah_kendaraan: 63,
+    tipe_elektrik: false
+  },
+  {
+    model: 'XJ-E Electric',
+    tahun_keluaran: 2016,
+    kapasitas_mesin: 500,
+    jumlah_kendaraan: 93,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 650 KRT Edition',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 649,
+    jumlah_kendaraan: 26,
+    tipe_elektrik: false
+  },
+  {
+    model: 'Minitrial Electric 20',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 700,
+    jumlah_kendaraan: 19,
+    tipe_elektrik: true
+  },
+  {
+    model: 'Ninja 650 Tourer',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 649,
+    jumlah_kendaraan: 79,
+    tipe_elektrik: false
+  },
+  {
+    model: 'FZ-X',
+    tahun_keluaran: 2022,
+    kapasitas_mesin: 149,
+    jumlah_kendaraan: 35,
+    tipe_elektrik: false
+  }
+]
