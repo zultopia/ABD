@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-const { fakerEN, faker } = require('@faker-js/faker');
+const { fakerID_ID, faker } = require('@faker-js/faker');
 
 const connection = mysql.createConnection({
   host: 'localhost',
@@ -426,17 +426,19 @@ function seedTablePerusahaan() {
         
         let companyName;
         do {
-            companyName = fakerEN.company.name();
+            companyName = fakerID_ID.company.name();
         } while (Names.includes(companyName));
         Names.push(companyName);
+        companyName.replace(/'/g, "''");
 
         let address;
         do {
             address = faker.location.streetAddress({ useFullAddress: true })
         } while (address.length > 255 || Addresses.includes(address));
         Addresses.push(address);
+        address.replace(/'/g, "''");
 
-        const query = `INSERT INTO Perusahaan (nama, alamat) VALUES ('${companyName.replace(/'/g, "''")}', '${address}')`;
+        const query = `INSERT INTO Perusahaan (nama, alamat) VALUES ('${companyName}', '${address}')`;
         connection.query(query, (err, result) => {
             if (err) throw err;
             console.log(`Inserted ${companyName} into Perusahaan`);
@@ -447,9 +449,12 @@ function seedTablePerusahaan() {
 }
 
 function seedTables() {
-    fakerEN.seed(100)
+    fakerID_ID.seed(100)
 
     seedTablePerusahaan();
+
+
+
 }
 
 /**
