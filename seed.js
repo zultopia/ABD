@@ -111,6 +111,20 @@ function createTableAsuransi() {
         FOREIGN KEY (dimiliki_oleh) REFERENCES Kendaraan(Model)
     );
      */
+    const query = `
+    CREATE TABLE Asuransi (
+        id_Asuransi INT AUTO_INCREMENT,
+        disediakan_oleh INT,
+        dimiliki_oleh VARCHAR(50),
+        tanggal_exp DATE,
+        harga_asuransi DECIMAL(10, 2),
+        PRIMARY KEY (id_Asuransi, disediakan_oleh, dimiliki_oleh),
+        FOREIGN KEY (disediakan_oleh) REFERENCES PerusahaanAsuransi(id_PerusahaanAsuransi),
+        FOREIGN KEY (dimiliki_oleh) REFERENCES Kendaraan(Model)
+    )
+    `
+
+    createTable("Asuransi", query);
 }
 
 function createTablePerawatan() {
@@ -126,6 +140,20 @@ function createTablePerawatan() {
         FOREIGN KEY (dimiliki_oleh) REFERENCES Kendaraan(Model)
     );
      */
+    const query = `
+    CREATE TABLE Perawatan (
+        id_Perawatan INT AUTO_INCREMENT,
+        disediakan_oleh INT,
+        dimiliki_oleh VARCHAR(50),
+        tanggal DATE,
+        tipe VARCHAR(50),
+        PRIMARY KEY (id_Perawatan, disediakan_oleh, dimiliki_oleh),
+        FOREIGN KEY (disediakan_oleh) REFERENCES PerusahaanPerawatan(id_PerusahaanPerawatan),
+        FOREIGN KEY (dimiliki_oleh) REFERENCES Kendaraan(Model)
+    )
+    `
+
+    createTable("Perawatan", query)
 }
 
 function createTableKendaraan() {
@@ -160,6 +188,16 @@ function createTableMotor() {
         FOREIGN KEY (model_motor) REFERENCES Kendaraan(model)
     );
      */
+    const query = `
+    CREATE TABLE Motor (
+        model_motor VARCHAR(50),
+        kapasitas_mesin INT,
+        PRIMARY KEY (model_motor),
+        FOREIGN KEY (model_motor) REFERENCES Kendaraan(model)
+    )
+    `
+
+    createTable("Motor", query)
 }
 
 function createTableMobil() {
@@ -172,6 +210,18 @@ function createTableMobil() {
         FOREIGN KEY (model_mobil) REFERENCES Kendaraan(model)
     );
      */
+
+    const query = `
+    CREATE TABLE Mobil (
+        model_mobil VARCHAR(50),
+        jumlah_kursi INT,
+        kelas ENUM('Normal', 'SUV', 'Van'),
+        PRIMARY KEY (model_mobil),
+        FOREIGN KEY (model_mobil) REFERENCES Kendaraan(model)
+    )
+    `
+
+    createTable("Mobil", query)
 }
 
 function createTableDetail() {
@@ -183,6 +233,15 @@ function createTableDetail() {
         PRIMARY KEY (id_detail)
     );
      */
+    const query = `
+    CREATE TABLE Detail (
+        id_detail INT AUTO_INCREMENT,
+        harga DECIMAL(10, 2),
+        kuantitas INT,
+        PRIMARY KEY (id_detail)
+    )
+    `
+    createTable("Detail", query)
 }
 
 function createTableDetailPeminjaman() {
@@ -197,6 +256,19 @@ function createTableDetailPeminjaman() {
         FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model)
     );
      */
+    const query = `
+    CREATE TABLE DetailPeminjaman (
+        id_peminjaman INT,
+        id_detail_peminjaman INT,
+        model_kendaraan VARCHAR(50),
+        PRIMARY KEY (id_peminjaman, id_detail_peminjaman, model_kendaraan),
+        FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman),
+        FOREIGN KEY (id_detail_peminjaman) REFERENCES Detail(id_detail),
+        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model)
+    )
+    `
+
+    createTable("DetailPeminjaman", query)
 }
 
 function createTablePeminjaman() {
@@ -209,6 +281,18 @@ function createTablePeminjaman() {
         PRIMARY KEY (id_peminjaman)
     );
      */
+
+    const query = `
+    CREATE TABLE Peminjaman (
+        id_peminjaman INT AUTO_INCREMENT,
+        status_peminjaman ENUM('returned', 'pending', 'rented'),
+        tanggal_mulai DATE,
+        tanggal_berakhir DATE,
+        PRIMARY KEY (id_peminjaman)
+    )
+    `
+
+    createTable("Peminjaman", query)
 }
 
 function createTableKlien() {
@@ -221,6 +305,17 @@ function createTableKlien() {
         PRIMARY KEY (id_klien)
     );
      */
+    const query = `
+    CREATE TABLE Klien (
+        id_klien INT AUTO_INCREMENT,
+        nama VARCHAR(255),
+        email VARCHAR(255),
+        nomor_telepon VARCHAR(20),
+        PRIMARY KEY (id_klien)
+    )
+    `
+
+    createTable("Klien", query)
 }
 
 function createTablePeminjamanKlien() {
@@ -235,6 +330,18 @@ function createTablePeminjamanKlien() {
         FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman)
     );
      */
+    const query = `
+    CREATE TABLE PeminjamanKlien (
+        id_klien INT,
+        id_pegawai INT,
+        id_peminjaman INT,
+        PRIMARY KEY (id_klien, id_pegawai, id_peminjaman),
+        FOREIGN KEY (id_klien) REFERENCES Klien(id_klien),
+        FOREIGN KEY (id_pegawai) REFERENCES Pegawai(id_pegawai),
+        FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman)
+    )
+    `
+    createTable("PeminjamanKlien", query)
 }
 
 function createTablePegawai() {
@@ -250,10 +357,68 @@ function createTablePegawai() {
         FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai)  
     );
      */
+
+    const query = `
+    CREATE TABLE Pegawai (
+        id_pegawai INT AUTO_INCREMENT,
+        id_atasan INT,
+        nama VARCHAR(255),
+        email VARCHAR(255),
+        nomor_telepon VARCHAR(20),
+        jabatan VARCHAR(50),
+        PRIMARY KEY (id_pegawai),
+        FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai)  
+    )`
+    createTable("Pegawai", query)
 }
 
 
+function createTables() {
+        // OK !
+        createTablePerusahaan();
 
+        // OK !
+        // Needs perusahaan
+        createTableKontakPerusahaan();
+    
+        // OK !
+        // Needs Perusahaan
+        createTablePerusahaanAsuransi();
+    
+        // OK !
+        // Needs Perusahaan
+        createTablePerusahaanPerawatan();
+    
+        // OK !
+        createTableKendaraan();
+    
+        // 
+        createTableAsuransi();
+    
+        //
+        createTablePerawatan();
+    
+        createTableMobil();
+    
+        createTableMotor();
+    
+        createTableDetail();
+    
+        createTablePeminjaman();
+    
+        createTableDetailPeminjaman();
+    
+        createTableKlien();
+    
+        createTablePegawai();
+    
+        createTablePeminjamanKlien();
+    
+}
+
+function seedTables() {
+
+}
 
 /**
  * Run the seeding, by creating the tables and insert a bunch of data.
@@ -275,21 +440,11 @@ function main() {
      * @ref https://app.diagrams.net/#G1KGB53olz7TQHCSylU_IqyHBWQxJqYH9P#%7B%22pageId%22%3A%22pUiTZZOMAEUaQYOUVsJx%22%7D
      */
 
-    // OK !
-    createTablePerusahaan();
+    createTables();
 
-    // OK !
-    createTableKontakPerusahaan();
 
-    // OK !
-    createTablePerusahaanAsuransi();
-
-    // OK !
-    createTablePerusahaanPerawatan();
-
-    // OK !
-    createTableKendaraan();
-
+    // Seed all the tables using faker.js
+    seedTables();
 
 
 
