@@ -691,7 +691,7 @@ async function seedTablePerawatan() {
         const disediakan_oleh = faker.helpers.arrayElement(perusahaanPerawatan).id_PerusahaanPerawatan;
         const dimiliki_oleh = car.model;
         const tanggal = faker.date.past(); 
-        const tipe = faker.vehicle.vehicleType(); 
+        const tipe = faker.vehicle.vehicle.type(); 
   
         const query = `INSERT INTO Perawatan (disediakan_oleh, dimiliki_oleh, tanggal, tipe) 
                        VALUES (?, ?, ?, ?)`;
@@ -787,6 +787,7 @@ async function seedTablePeminjamanKlien() {
     const queryGetPegawai = `SELECT * FROM Pegawai`;
     const queryGetKlien = `SELECT id_klien FROM Klien`;
     const queryGetPeminjaman = `SELECT id_peminjaman FROM Peminjaman`;
+    let entries = [];
 
     try {
       const [pegawai] = await connection.query(queryGetPegawai);
@@ -803,6 +804,16 @@ async function seedTablePeminjamanKlien() {
         const idPegawai = tempPegawai.id_pegawai;
         
         const idPeminjaman = faker.helpers.arrayElement(peminjaman).id_peminjaman;
+
+        let entry = {
+            klien : idKlien,
+            pegawai : idPegawai,
+            peminjaman : idPeminjaman
+        }
+
+        if (entries.includes(entry)) {
+            i--;
+        }
 
         const query = `INSERT INTO PeminjamanKlien (id_klien, id_pegawai, id_peminjaman) VALUES (?, ?, ?)`;
 
