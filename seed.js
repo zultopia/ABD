@@ -105,7 +105,7 @@ async function createTablePerusahaanPerawatan() {
 async function createTableAsuransi() {
     /**
     CREATE TABLE Asuransi (
-        id_Asuransi INT AUTO_INCREMENT,
+        id_Asuransi INT,
         disediakan_oleh INT,
         dimiliki_oleh VARCHAR(50),
         tanggal_exp DATE,
@@ -134,7 +134,7 @@ async function createTableAsuransi() {
 async function createTablePerawatan() {
     /**
     CREATE TABLE Perawatan (
-        id_Perawatan INT AUTO_INCREMENT,
+        id_Perawatan INT,
         disediakan_oleh INT,
         dimiliki_oleh VARCHAR(50),
         tanggal DATE,
@@ -626,9 +626,10 @@ async function seedTables() {
 
     await seedTablePerusahaanAsuransiAndPerusahaanPerawatan();
 
+    await seedKendaraanAndItsSpecializations();
+    
     await seedTablePegawai();
-
-    // await seedKendaraanAndItsSpecializations();
+    
 }
 
 /**
