@@ -691,7 +691,7 @@ async function seedTablePerawatan() {
         const disediakan_oleh = faker.helpers.arrayElement(perusahaanPerawatan).id_PerusahaanPerawatan;
         const dimiliki_oleh = car.model;
         const tanggal = faker.date.past(); 
-        const tipe = faker.vehicle.vehicle.type(); 
+        const tipe = faker.vehicle.type(); 
   
         const query = `INSERT INTO Perawatan (disediakan_oleh, dimiliki_oleh, tanggal, tipe) 
                        VALUES (?, ?, ?, ?)`;
