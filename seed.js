@@ -895,7 +895,7 @@ async function seedTables() {
 */
 async function main() {
     fakerID_ID.seed(100)
-
+    faker.seed(100)
     try {
         /**
          * Create tables using the relation schema we have designed
