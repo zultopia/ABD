@@ -247,7 +247,7 @@ async function createTableDetail() {
         harga DECIMAL(10, 2),
         kuantitas INT,
         PRIMARY KEY (id_detail, model_kendaraan),
-        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model
+        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model)
 
     )
     `
@@ -611,7 +611,7 @@ async function seedKendaraanAndItsSpecializations() {
 
     const merks = ["Honda", "Toyota", "Suzuki", "BMW", "Kijang", "Fiat"]
 
-    for (let i = 0; i < 250; i++) {
+    for (let i = 0; i < 300; i++) {
         if (fakerID_ID.number.int({ min: 0, max: 1 }) === 0) {
             // Motor
 
@@ -741,15 +741,15 @@ async function seedTableDetail() {
             const queryGetMaksimalKuantitasPeminjaman = `SELECT jumlah_kendaraan FROM Kendaraan WHERE model = ?`;
             const [maksimalKuantitasPeminjaman] = await connection.query(queryGetMaksimalKuantitasPeminjaman, [kendaraan[i].model]);
 
-            const jumlahPernahDipinjamBerapaKali = faker.number.int({ min: 0, max: 10 });
+            const jumlahPernahDipinjamBerapaKali = faker.number.int({ min: 0, max: 3 });
             for (let j = 0; j < jumlahPernahDipinjamBerapaKali; j++) {
                 const model_kendaraan = kendaraan[i].model;
                 const harga = faker.number.int({ min: 1000000, max: 10000000 });
                 const kuantitas = faker.number.int({ min: 1, max: maksimalKuantitasPeminjaman[0].jumlah_kendaraan });
 
-                const query = `INSERT INTO Detail (id_detail, model_kendaraan, harga, kuantitas) VALUES (?, ?, ?, ?)`;
+                const query = `INSERT INTO Detail (model_kendaraan, harga, kuantitas) VALUES (?, ?, ?)`;
 
-                await connection.query(query, [i, model_kendaraan, harga, kuantitas]);
+                await connection.query(query, [model_kendaraan, harga, kuantitas]);
                 console.log(`Inserted detail data for ${model_kendaraan}`);
             }
         }
