@@ -431,7 +431,7 @@ async function seedTablePerusahaan() {
     let Names = [];
     let Addresses = [];
   
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 150; i++) {
       let companyName;
       do {
         companyName = fakerID_ID.company.name();
@@ -490,7 +490,7 @@ async function seedTablePegawai() {
     const names = [];
     const phoneNumbers = [];
     const managersIdx = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
         let email;
         let name;
         let firstName;
@@ -550,7 +550,7 @@ async function seedTableKlien() {
         const perusahaanPhoneNumbers = rows.map(row => row.nomor_telepon)
         const names = [];
         const phoneNumbers = [];
-        for (let i = 0; i < 20; i++) {
+        for (let i = 0; i < 50; i++) {
             let email;
             let name;
             let firstName;
@@ -609,25 +609,33 @@ async function seedKendaraanAndItsSpecializations() {
     let motorSet = []
     let mobilSet = []
 
-    for (let i = 0; i < 50; i++) {
+    const merks = ["Honda", "Toyota", "Suzuki", "BMW", "Kijang", "Fiat"]
+
+    for (let i = 0; i < 250; i++) {
         if (fakerID_ID.number.int({ min: 0, max: 1 }) === 0) {
             // Motor
 
             let currentMotor;
+            let merk;
+            let fullName;
             do {
-                currentMotor = motor[fakerID_ID.number.int({ min: 0, max: motor.length - 1 })];
-            } while (motorSet.includes(currentMotor.model));
-            motorSet.push(currentMotor.model);
+                merk = faker.helpers.arrayElement(merks);
+                currentMotor = faker.helpers.arrayElement(motor);
+                fullName = merk + " " + currentMotor.model;
+            } while (motorSet.includes(fullName));
+            motorSet.push(fullName)
 
             const queryInsertKendaraan = `INSERT INTO Kendaraan (model, tahun_keluaran, tipe_elektrik, jumlah_kendaraan) VALUES (?, ?, ?, ?)`;
-            await connection.query(queryInsertKendaraan, [currentMotor.model, currentMotor.tahun_keluaran, currentMotor.tipe_elektrik ? 'Elektrik' : 'NonElektrik', currentMotor.jumlah_kendaraan]);
+            await connection.query(queryInsertKendaraan, [fullName, currentMotor.tahun_keluaran, currentMotor.tipe_elektrik ? 'Elektrik' : 'NonElektrik', currentMotor.jumlah_kendaraan]);
 
             const queryInsertMotor = `INSERT INTO Motor (model_motor, kapasitas_mesin) VALUES (?, ?)`;
-            await connection.query(queryInsertMotor, [currentMotor.model, currentMotor.kapasitas_mesin]);
+            await connection.query(queryInsertMotor, [fullName, currentMotor.kapasitas_mesin]);
         } else {
             let currentModel;
+            let merk;
             do {
-                currentModel = faker.vehicle.model()
+                merk = faker.helpers.arrayElement(merks);
+                currentModel = merk + " " + faker.vehicle.model();
             } while (mobilSet.includes(currentModel));
             mobilSet.push(currentModel);
 
@@ -779,7 +787,7 @@ async function seedTablePeminjaman() {
     const statusPeminjamanValues = ["returned", "pending", "rented"];
     let startDates = [];
     let currentDate = new Date('2024-05-05');
-    for (let i = 0; i < 20; i++) {    
+    for (let i = 0; i < 100; i++) {    
         let startDate;
         do {
             startDate = faker.date.between({ from: '2024-04-01', to: '2024-05-05' });
@@ -823,7 +831,7 @@ async function seedTablePeminjamanKlien() {
       const [klien] = await connection.query(queryGetKlien);
       const [peminjaman] = await connection.query(queryGetPeminjaman);
 
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 20; i++) {
         const idKlien= faker.helpers.arrayElement(klien).id_klien;
 
         let tempPegawai;
