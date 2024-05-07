@@ -768,7 +768,7 @@ async function seedTableDetailPeminjaman() {
       const [detail] = await connection.query(queryGetDetail);
       const [kendaraan] = await connection.query(queryGetKendaraan);
   
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 100; i++) {
         const id_peminjaman = faker.helpers.arrayElement(peminjaman).id_peminjaman;
         const id_detail_peminjaman = faker.helpers.arrayElement(detail).id_detail;
         const model_kendaraan = faker.helpers.arrayElement(kendaraan).model;
