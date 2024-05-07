@@ -232,17 +232,23 @@ async function createTableDetail() {
     /**
     CREATE TABLE Detail (
         id_detail INT AUTO_INCREMENT,
+        model_kendaraan VARCHAR(50),
         harga DECIMAL(10, 2),
         kuantitas INT,
-        PRIMARY KEY (id_detail)
-    );
+        PRIMARY KEY (id_detail, model_kendaraan),
+        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model
+
+    )
      */
     const query = `
     CREATE TABLE Detail (
         id_detail INT AUTO_INCREMENT,
+        model_kendaraan VARCHAR(50),
         harga DECIMAL(10, 2),
         kuantitas INT,
-        PRIMARY KEY (id_detail)
+        PRIMARY KEY (id_detail, model_kendaraan),
+        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model
+
     )
     `
     await createTable("Detail", query)
@@ -717,17 +723,28 @@ async function seedTablePerawatan() {
 }
 
 async function seedTableDetail() {
+    const queryGetKendaraan = `SELECT model FROM Kendaraan`;
+
     try {
-      for (let i = 0; i < 30; i++) {
-        const harga = faker.number.int({min: 500000, max: 5000000}); 
-        const kuantitas = faker.number.int({ min: 1, max: 50 });
-  
-        const query = `INSERT INTO Detail (harga, kuantitas) 
-                       VALUES (?, ?)`;
-  
-        await connection.query(query, [harga, kuantitas]);
-        console.log(`Inserted detail data with price: ${harga} and quantity: ${kuantitas}`);
-      }
+        const [kendaraan] = await connection.query(queryGetKendaraan);
+
+        
+        for (let i = 0; i < kendaraan.length; i++) {
+            const queryGetMaksimalKuantitasPeminjaman = `SELECT jumlah_kendaraan FROM Kendaraan WHERE model = ?`;
+            const [maksimalKuantitasPeminjaman] = await connection.query(queryGetMaksimalKuantitasPeminjaman, [kendaraan[i].model]);
+
+            const jumlahPernahDipinjamBerapaKali = faker.number.int({ min: 0, max: 10 });
+            for (let j = 0; j < jumlahPernahDipinjamBerapaKali; j++) {
+                const model_kendaraan = kendaraan[i].model;
+                const harga = faker.number.int({ min: 1000000, max: 10000000 });
+                const kuantitas = faker.number.int({ min: 1, max: maksimalKuantitasPeminjaman[0].jumlah_kendaraan });
+
+                const query = `INSERT INTO Detail (id_detail, model_kendaraan, harga, kuantitas) VALUES (?, ?, ?, ?)`;
+
+                await connection.query(query, [i, model_kendaraan, harga, kuantitas]);
+                console.log(`Inserted detail data for ${model_kendaraan}`);
+            }
+        }
     } catch (error) {
       console.error('Error seeding Detail:', error);
     }
