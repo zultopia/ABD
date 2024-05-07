@@ -117,12 +117,12 @@ async function createTableAsuransi() {
      */
     const query = `
     CREATE TABLE Asuransi (
-        id_Asuransi INT AUTO_INCREMENT,
+        id_Asuransi INT,
         disediakan_oleh INT,
         dimiliki_oleh VARCHAR(50),
         tanggal_exp DATE,
         harga_asuransi DECIMAL(10, 2),
-        PRIMARY KEY (id_Asuransi, disediakan_oleh, dimiliki_oleh),
+        PRIMARY KEY (id_Asuransi, disediakan_oleh),
         FOREIGN KEY (disediakan_oleh) REFERENCES PerusahaanAsuransi(id_PerusahaanAsuransi),
         FOREIGN KEY (dimiliki_oleh) REFERENCES Kendaraan(Model)
     )
@@ -668,19 +668,25 @@ async function seedTableAsuransi() {
   
     try {
       const [perusahaanAsuransi] = await connection.query(queryGetPerusahaanAsuransi);
-      const [kendaraan] = await connection.query(queryGetKendaraan);
-  
-      for (const car of kendaraan) {
-        const disediakan_oleh = faker.helpers.arrayElement(perusahaanAsuransi).id_PerusahaanAsuransi;
-        const dimiliki_oleh = car.model;
-        const tanggal_exp = faker.date.future();
-        const harga_asuransi = faker.finance.amount(500000, 5000000, 2); 
-  
-        const query = `INSERT INTO Asuransi (disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi) 
-                       VALUES (?, ?, ?, ?)`;
-  
-        await connection.query(query, [disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi]);
-        console.log(`Inserted insurance data for ${dimiliki_oleh}`);
+      const [ListOfModelKendaraan] = await connection.query(queryGetKendaraan);
+
+      for (const perusahaan of perusahaanAsuransi) {
+        const jumlahDisediakan = faker.number.int({ min: 1, max: 10 });
+        const disediakan_oleh = perusahaan.id_PerusahaanAsuransi;
+
+        for (let i = 1; i <= jumlahDisediakan; i++) {
+
+            dimiliki_oleh = faker.helpers.arrayElement(ListOfModelKendaraan).model;
+            tanggal_exp = faker.date.future();
+            harga_asuransi = faker.number.int({min: 500000, max: 5000000}); 
+
+      
+            const query = `INSERT INTO Asuransi (id_Asuransi, disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi) VALUES (?, ?, ?, ?, ?)`;
+      
+            await connection.query(query, [i, disediakan_oleh, dimiliki_oleh, tanggal_exp, harga_asuransi]);
+            console.log(`Inserted insurance data for ${dimiliki_oleh}`);
+        }
+
       }
     } catch (error) {
       console.error('Error seeding Asuransi:', error);
@@ -690,32 +696,38 @@ async function seedTableAsuransi() {
 async function seedTablePerawatan() {
     const queryGetPerusahaanPerawatan = `SELECT id_PerusahaanPerawatan FROM PerusahaanPerawatan`;
     const queryGetKendaraan = `SELECT model FROM Kendaraan`;
+
+    const types = ["Ganti oli", "Ganti aki", "Ganti lampu", "Steam", "Ganti ban", "Ganti kampas rem", "Ganti filter oli", "Ganti filter udara", "Ganti filter bensin", "Ganti busi", "Ganti kabel busi", "Ganti kopling", "Ganti rantai", "Ganti gear", "Ganti karburator", "Ganti shockbreaker", "Ganti kampas kopling", "Ganti kampas rem", "Ganti kabel gas", "Ganti kabel kopling", "Ganti kabel rem", "Ganti kabel speedometer"]
   
     try {
-      const [perusahaanPerawatan] = await connection.query(queryGetPerusahaanPerawatan);
-      const [kendaraan] = await connection.query(queryGetKendaraan);
+        const [PerusahaanPerawatan] = await connection.query(queryGetPerusahaanPerawatan);
+        const [ListOfModelKendaraan] = await connection.query(queryGetKendaraan);
   
-      for (const car of kendaraan) {
-        const disediakan_oleh = faker.helpers.arrayElement(perusahaanPerawatan).id_PerusahaanPerawatan;
-        const dimiliki_oleh = car.model;
-        const tanggal = faker.date.past(); 
-        const tipe = faker.vehicle.type(); 
+        for (const perusahaan of PerusahaanPerawatan) {
+          const jumlahDisediakan = faker.number.int({ min: 1, max: 10 });
+          const disediakan_oleh = perusahaan.id_PerusahaanPerawatan;
   
-        const query = `INSERT INTO Perawatan (disediakan_oleh, dimiliki_oleh, tanggal, tipe) 
-                       VALUES (?, ?, ?, ?)`;
+          for (let i = 1; i <= jumlahDisediakan; i++) {
   
-        await connection.query(query, [disediakan_oleh, dimiliki_oleh, tanggal, tipe]);
-        console.log(`Inserted maintenance data for ${dimiliki_oleh}`);
+            const dimiliki_oleh = faker.helpers.arrayElement(ListOfModelKendaraan).model;
+            const tanggal = faker.date.past();
+            const tipe = faker.helpers.arrayElement(types);
+  
+            const query = `INSERT INTO Perawatan (id_Perawatan, disediakan_oleh, dimiliki_oleh, tanggal, tipe) VALUES (?, ?, ?, ?, ?)`;
+
+            await connection.query(query, [i, disediakan_oleh, dimiliki_oleh, tanggal, tipe]);
+            console.log(`Inserted perawatan data for ${dimiliki_oleh}`);
+          }
+        }
+      } catch (error) {
+        console.error('Error seeding Asuransi:', error);
       }
-    } catch (error) {
-      console.error('Error seeding Perawatan:', error);
-    }
 }
 
 async function seedTableDetail() {
     try {
       for (let i = 0; i < 50; i++) {
-        const harga = faker.finance.amount(100000, 1000000, 2); 
+        const harga = faker.number.int({min: 500000, max: 5000000}); 
         const kuantitas = faker.number.int({ min: 1, max: 50 });
   
         const query = `INSERT INTO Detail (harga, kuantitas) 
