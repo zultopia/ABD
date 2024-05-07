@@ -146,7 +146,7 @@ async function createTablePerawatan() {
      */
     const query = `
     CREATE TABLE Perawatan (
-        id_Perawatan INT AUTO_INCREMENT,
+        id_Perawatan INT,
         disediakan_oleh INT,
         dimiliki_oleh VARCHAR(50),
         tanggal DATE,
