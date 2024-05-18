@@ -5,7 +5,7 @@ const motor = require("./motorcycles.js");
 const connection = createPool({
   host: "localhost",
   user: "grbadmin",
-  password: "password",
+  password: "Password1!",
   database: "grb",
   waitForConnections: true,
   connectionLimit: 10,
@@ -247,31 +247,37 @@ async function createTableDetail() {
   await createTable("Detail", query);
 }
 
-async function createTableDetailPeminjaman() {
-  /**
-    CREATE TABLE DetailPeminjaman (
-        id_peminjaman INT,
-        id_detail_peminjaman INT,
-        model_kendaraan VARCHAR(50),
-        PRIMARY KEY (id_peminjaman, id_detail_peminjaman, model_kendaraan),
-        FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman),
-        FOREIGN KEY (id_detail_peminjaman) REFERENCES Detail(id_detail),
-        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model)
+async function seedTableDetailPeminjaman() {
+  try {
+    const [details] = await connection.query(
+      "SELECT id_detail, model_kendaraan FROM Detail"
     );
-     */
-  const query = `
-    CREATE TABLE DetailPeminjaman (
-        id_peminjaman INT,
-        id_detail_peminjaman INT,
-        model_kendaraan VARCHAR(50),
-        PRIMARY KEY (id_peminjaman, id_detail_peminjaman, model_kendaraan),
-        FOREIGN KEY (id_peminjaman) REFERENCES Peminjaman(id_peminjaman),
-        FOREIGN KEY (id_detail_peminjaman) REFERENCES Detail(id_detail),
-        FOREIGN KEY (model_kendaraan) REFERENCES Kendaraan(model)
-    )
-    `;
 
-  await createTable("DetailPeminjaman", query);
+    const [loans] = await connection.query(
+      "SELECT id_peminjaman FROM Peminjaman"
+    );
+
+    for (const detail of details) {
+      const id_detail_peminjaman = detail.id_detail;
+      const model_kendaraan = detail.model_kendaraan;
+
+      const selectedLoan = faker.helpers.arrayElement(loans);
+      const id_peminjaman = selectedLoan.id_peminjaman;
+
+      const query = `INSERT INTO DetailPeminjaman (id_peminjaman, id_detail_peminjaman, model_kendaraan)
+                       VALUES (?, ?, ?)`;
+      await connection.query(query, [
+        id_peminjaman,
+        id_detail_peminjaman,
+        model_kendaraan,
+      ]);
+      console.log(
+        `Linked detail ID ${id_detail_peminjaman} (model ${model_kendaraan}) with loan ID ${id_peminjaman}`
+      );
+    }
+  } catch (error) {
+    console.error("Error seeding DetailPeminjaman:", error);
+  }
 }
 
 async function createTablePeminjaman() {
@@ -843,35 +849,47 @@ async function seedTableDetail() {
 }
 
 async function seedTableDetailPeminjaman() {
-  const queryGetPeminjaman = `SELECT id_peminjaman FROM Peminjaman`;
-  const queryGetDetail = `SELECT id_detail FROM Detail`;
-  const queryGetKendaraan = `SELECT model FROM Kendaraan`;
-
   try {
-    const [peminjaman] = await connection.query(queryGetPeminjaman);
-    const [detail] = await connection.query(queryGetDetail);
-    const [kendaraan] = await connection.query(queryGetKendaraan);
+    // Retrieve all loan IDs
+    const [loans] = await connection.query(
+      "SELECT id_peminjaman FROM Peminjaman"
+    );
 
-    for (let i = 0; i < 100; i++) {
-      const id_peminjaman =
-        faker.helpers.arrayElement(peminjaman).id_peminjaman;
-      const id_detail_peminjaman = faker.helpers.arrayElement(detail).id_detail;
-      const model_kendaraan = faker.helpers.arrayElement(kendaraan).model;
+    // Loop through each loan to associate it with vehicle details
+    for (const loan of loans) {
+      const id_peminjaman = loan.id_peminjaman;
 
-      const query = `INSERT INTO DetailPeminjaman (id_peminjaman, id_detail_peminjaman, model_kendaraan) 
-                       VALUES (?, ?, ?)`;
+      // Randomly decide how many different vehicle models are involved in this loan
+      const numVehicles = fakerID_ID.number.int({ min: 1, max: 3 });
 
-      await connection.query(query, [
-        id_peminjaman,
-        id_detail_peminjaman,
-        model_kendaraan,
-      ]);
-      console.log(`Inserted detail loan data for ${model_kendaraan}`);
+      // Get random unique vehicle models to associate with this loan
+      const [details] = await connection.query(
+        `SELECT id_detail, model_kendaraan FROM Detail ORDER BY RAND() LIMIT ?`,
+        [numVehicles]
+      );
+
+      for (const detail of details) {
+        const id_detail_peminjaman = detail.id_detail;
+        const model_kendaraan = detail.model_kendaraan;
+
+        // Insert into DetailPeminjaman
+        const query = `INSERT INTO DetailPeminjaman (id_peminjaman, id_detail_peminjaman, model_kendaraan)
+                         VALUES (?, ?, ?)`;
+        await connection.query(query, [
+          id_peminjaman,
+          id_detail_peminjaman,
+          model_kendaraan,
+        ]);
+        console.log(
+          `Inserted detail loan data for model ${model_kendaraan} with loan ID ${id_peminjaman}`
+        );
+      }
     }
   } catch (error) {
     console.error("Error seeding DetailPeminjaman:", error);
   }
 }
+
 async function seedTablePeminjaman() {
   const statusPeminjamanValues = ["returned", "pending", "rented"];
   let startDates = [];
