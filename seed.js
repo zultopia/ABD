@@ -371,7 +371,7 @@ async function createTablePegawai() {
         jabatan ENUM('owner', 'manager', 'staff'),
         PRIMARY KEY (id_pegawai),
         FOREIGN KEY (id_atasan) REFERENCES Pegawai(id_pegawai),
-        UNIQUE (name),
+        UNIQUE (nama)
     )`;
   await createTable("Pegawai", query);
 }
