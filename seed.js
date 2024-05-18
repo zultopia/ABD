@@ -5,7 +5,7 @@ const motor = require("./motorcycles.js");
 const connection = createPool({
   host: "localhost",
   user: "grbadmin",
-  password: "Password1!",
+  password: "password",
   database: "grb",
   waitForConnections: true,
   connectionLimit: 10,
