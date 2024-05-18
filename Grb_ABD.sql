@@ -180,7 +180,7 @@ DROP TABLE IF EXISTS `Mobil`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Mobil` (
-  `model_mobil` varchar(50) NOT NULL,
+  `model_mobil` varchar (50) NOT NULL,
   `jumlah_kursi` int(11) DEFAULT NULL,
   `kelas` enum('Normal','SUV','Van') DEFAULT NULL,
   PRIMARY KEY (`model_mobil`),
